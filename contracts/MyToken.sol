@@ -9,14 +9,14 @@ contract MyToken{
     uint256 public totalSupply; // 발행량
     mapping(address => uint256) public balanceOf; // 잔고를 확인하기 위한 mapping
 
-    constructor(string memory _name,string memory _symbol,uint8 _decimal){
+    constructor(string memory _name,string memory _symbol,uint8 _decimal,uint256 _amount){
         //길이가 정해져 있지 않은 string의 경우 memory를 사용해야 한다
         //생성할 때 발행량을 정해줄 수 있다
         //딱 한번 호출됨
         name = _name;
         symbol = _symbol;
         decimals = _decimal;
-        _mint(1*10*uint256(decimals), msg.sender);// 1 token == 10^18 wei
+        _mint(_amount*10*uint256(decimals), msg.sender);// 1 token == 10^18 wei
         //msg.sender는 이 계약을 배포한 사람의 주소
 
     }
