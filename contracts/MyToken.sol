@@ -39,4 +39,14 @@ contract MyToken{
     function _name() external view returns (string memory) {
         return name;
     }
+
+
+    function transfer(uint256 amount, address to)external{
+        balanceOf[msg.sender] -= amount; // 보낸사람의 잔고에서 amount만큼 차감
+        balanceOf[to] += amount; // 받는사람의 잔고에 amount만큼 추가
+        //msg.sender는 이 계약을 배포한 사람의 주소
+    }
+
+
+
 }

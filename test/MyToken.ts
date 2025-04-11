@@ -29,4 +29,11 @@ describe("mytoken deploy",() => {
         const signers = await hre.ethers.getSigners();
         expect(await MyTokenC.balanceOf(signers[0].address)).to.equal(1n*10n**18n); 
     });
+
+    it("should have 0.5MT", async () => {
+        const signers = await hre.ethers.getSigners();
+        await MyTokenC.transfer(hre.ethers.parseUnits("0.5",18),signers[1].address);
+        expect(await MyTokenC.balanceOf(signers[1].address)).to.equal(hre.ethers.parseUnits("0.5",18));
+    });
+
 });
