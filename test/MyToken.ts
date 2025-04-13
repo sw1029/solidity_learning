@@ -39,19 +39,34 @@ describe("mytoken deploy",() => {
         });
     });
 
-    
+    describe("transfer", () => { //transfer는 사실상 transaction을 의미함
+        it("should have 0.5MT", async () => {
+            const signers = await hre.ethers.getSigners();
+            const tx = await MyTokenC.transfer(
+                hre.ethers.parseUnits("0.5",decimals),
+                signers[1].address
+            )
+            const receipt = await tx.wait();//거래영수증
+            await MyTokenC.transfer(hre.ethers.parseUnits("0.5",decimals),signers[1].address);
+            expect(await MyTokenC.balanceOf(signers[1].address)).to.equal(hre.ethers.parseUnits("0.5",decimals));
+        });
+       
+        it("should be reverted with insufficient balance error", async () => {
+            const signers = await hre.ethers.getSigners();
+            await expect(MyTokenC.transfer(hre.ethers.parseUnits((mintingAmount+1n).toString(),decimals),
+            signers[1])).to.be.revertedWith("Insufficient balance");
 
-    it("should have 0.5MT", async () => {
-        const signers = await hre.ethers.getSigners();
-        await MyTokenC.transfer(hre.ethers.parseUnits("0.5",decimals),signers[1].address);
-        expect(await MyTokenC.balanceOf(signers[1].address)).to.equal(hre.ethers.parseUnits("0.5",decimals));
+            const filter = MyTokenC.filters.Transfer(signers[0].address)
+            MyTokenC.queryFilter(filter,0,"latest")
+            //최신 블럭까지 검색 후 조건에 맞는 이벤트를 가져와라
+            //보통 0 대신 시작주소를 다른 값으로 조정함
+
+        });
+
+        //event chect 로직 시에는 expect 앞에 await을 붙여줘야함.
+        
     });
 
-    it("should be reverted with insufficient balance error", async () => {
-        const signers = await hre.ethers.getSigners();
-        await expect(MyTokenC.transfer(hre.ethers.parseUnits((mintingAmount+1n).toString(),decimals),
-        signers[1])).to.be.revertedWith("Insufficient balance");
-    }
-    );
+    
 
 });

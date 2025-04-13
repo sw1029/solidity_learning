@@ -2,6 +2,15 @@
 pragma solidity ^0.8.28;
 
 contract MyToken{
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    // 이벤트를 발생시키는 경우
+    //indexed를 사용하면 검색이 가능하다
+    //indexing의 의미 == topic에 데이터를 넣어달라
+
+    //event의 사용 이유 == 비싼 storage를 사용하지 않고, 로그를 남길 수 있다
+    //event는 블록체인에 저장된다
+    // 블록체인에 저장된 데이터는 영구적이다
+
     string public name;
     string public symbol;
     uint8 public decimals; // 소수점 n자리까지 지원하겠다
@@ -45,6 +54,8 @@ contract MyToken{
         balanceOf[msg.sender] -= amount; // 보낸사람의 잔고에서 amount만큼 차감
         balanceOf[to] += amount; // 받는사람의 잔고에 amount만큼 추가
         //msg.sender는 이 계약을 배포한 사람의 주소
+
+        emit Transfer(msg.sender, to, amount); // 이벤트 발생
     }
 
 
