@@ -85,6 +85,20 @@ describe("mytoken deploy",() => {
                 hre.ethers.parseUnits("1",decimals)))
             .to.be.revertedWith("Insufficient allowance");
         });
-       
+        it("should under 100MT", async () => {
+            const signers = await hre.ethers.getSigners();
+            await MyTokenC.connect(signers[0]).approve(
+                signers[1].address, // 100MT 인출 권한을 signers[1]에게 부여
+                hre.ethers.parseUnits("100",decimals)
+            );
+            await MyTokenC.connect(signers[1]).transferFrom(
+                signers[0].address,
+                signers[1].address,// 100MT 인출
+                hre.ethers.parseUnits("100",decimals)
+            );
+            const balance = await MyTokenC.balanceOf(signers[1].address);//잔액 (balance)를 가져옴옴
+            expect(balance).to.equal(hre.ethers.parseUnits("100",decimals));
+            //expect를 통해 잔액이 100MT인지 확인
+        });    
     });    
 });
