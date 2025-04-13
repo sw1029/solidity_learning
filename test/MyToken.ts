@@ -56,17 +56,35 @@ describe("mytoken deploy",() => {
             await expect(MyTokenC.transfer(hre.ethers.parseUnits((mintingAmount+1n).toString(),decimals),
             signers[1])).to.be.revertedWith("Insufficient balance");
 
-            const filter = MyTokenC.filters.Transfer(signers[0].address)
-            MyTokenC.queryFilter(filter,0,"latest")
+            //const filter = MyTokenC.filters.Transfer(signers[0].address)
+            //MyTokenC.queryFilter(filter,0,"latest")
             //최신 블럭까지 검색 후 조건에 맞는 이벤트를 가져와라
             //보통 0 대신 시작주소를 다른 값으로 조정함
 
         });
 
         //event chect 로직 시에는 expect 앞에 await을 붙여줘야함.
-        
+
     });
 
-    
-
+    describe("TransferFrom", () => {
+        it ("should be emit Approval event", async () => {
+            const signers = await hre.ethers.getSigners();
+            await expect(
+                MyTokenC.approve(
+                    signers[1].address,
+                    hre.ethers.parseUnits("10",decimals))
+            )
+            .to.emit(MyTokenC,"Approval")
+            .withArgs(signers[1].address,hre.ethers.parseUnits("10",decimals));
+        });
+        it("should be reverted with insufficient allowance error", async () => {
+            const signers = await hre.ethers.getSigners();
+            await expect(MyTokenC.connect(signers[1])
+            .transferFrom(signers[0].address,signers[1].address,
+                hre.ethers.parseUnits("1",decimals)))
+            .to.be.revertedWith("Insufficient allowance");
+        });
+       
+    });    
 });
