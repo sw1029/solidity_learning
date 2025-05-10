@@ -85,7 +85,7 @@ describe("mytoken deploy",() => {
                 hre.ethers.parseUnits("1",decimals)))
             .to.be.revertedWith("Insufficient allowance");
         });
-        it("should under 100MT", async () => {
+        it("should 100MT ok", async () => {
             const signers = await hre.ethers.getSigners();
             await MyTokenC.connect(signers[0]).approve(
                 signers[1].address, // 100MT 인출 권한을 signers[1]에게 부여
