@@ -43,6 +43,9 @@ contract MyToken{
         totalSupply += amount;
         balanceOf[owner] += amount;
     }
+    function mint(uint256 amount, address owner) external {
+        _mint(amount, owner);
+    }
 
     function _totalSupply()  external view returns (uint256) {
         return totalSupply;
