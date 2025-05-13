@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
+import "./ManagedAccess.sol";
 
-contract MyToken{
+contract MyToken is ManagedAccess{
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed spender, uint256 value);
     // 이벤트를 발생시키는 경우
@@ -15,8 +16,7 @@ contract MyToken{
     string public name;
     string public symbol;
     uint8 public decimals; // 소수점 n자리까지 지원하겠다
-    address public owner; // 계약을 배포한 사람의 주소
-    address public manager;
+
 
     uint256 public totalSupply; // 발행량
     mapping(address => uint256) public balanceOf; // 잔고를 확인하기 위한 mapping
@@ -25,27 +25,17 @@ contract MyToken{
     // approve를 통해서 허가된 사람에게 보내는 것
     // mapping(주소 => mapping(주소 => 잔고))
 
-    constructor(string memory _name,string memory _symbol,uint8 _decimal,uint256 _amount){
+    constructor(string memory _name,string memory _symbol,uint8 _decimal,uint256 _amount)ManagedAccess(msg.sender, msg.sender) {
         //길이가 정해져 있지 않은 string의 경우 memory를 사용해야 한다
         //생성할 때 발행량을 정해줄 수 있다
         //딱 한번 호출됨
-        owner = msg.sender; // 계약을 배포한 사람의 주소
+         
         name = _name;
         symbol = _symbol;
         decimals = _decimal;
         _mint(_amount*10*uint256(decimals), msg.sender);// 1 token == 10^18 wei
         //msg.sender는 이 계약을 배포한 사람의 주소
 
-    }
-
-    modifier onlyOwner {
-        // 이 계약을 배포한 사람만 사용할 수 있다
-        require(msg.sender == owner, "only owner can call this function");
-        _;
-    }
-    modifier onlyMgr {
-        require(msg.sender == manager, "only manager can call this function");
-        _;
     }
 
     //transaction
