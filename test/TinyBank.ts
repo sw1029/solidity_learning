@@ -39,10 +39,7 @@ describe("TinyBank", () => {
             expect(await MyTokenC.balanceOf(tinyBankC)).equal(await tinyBankC.totalStaked());
             expect(await tinyBankC.totalStaked()).equal(stakingAmount);
         });
-        it("",async () => {
-            const signers = await hre.ethers.getSigners();
-            
-        });
+        
     });
 
     describe("Withdraw",() => {
@@ -54,7 +51,29 @@ describe("TinyBank", () => {
             await tinyBankC.stake(stakingAmount);
             await tinyBankC.withdraw(stakingAmount);
             expect(await tinyBankC.staked(signers[0].address)).equal(0);
-            //staked가 왜 호출이 안될까???
+            
+        });
+        
+    });
+    describe("reward",() => {
+        
+        it("should reward 1MT every blocks",async () => {
+            const signers = await hre.ethers.getSigners();
+            const stakingAmount = hre.ethers.parseUnits("50",decimals);
+            await MyTokenC.approve(await tinyBankC.getAddress(),stakingAmount);//address에게 contract가 허가를 받아야 함
+            await tinyBankC.stake(stakingAmount);
+            
+            const blocks = 5n;
+            const transferAmount = hre.ethers.parseUnits("1",decimals);
+            for(var i = 0; i < blocks; i++){
+                await MyTokenC.transfer(transferAmount,signers[0].address);
+            }
+
+            await tinyBankC.withdraw(stakingAmount);//withdraw를 하면 reward가 지급
+            expect(await MyTokenC.balanceOf(signers[0].address)).equal(
+                hre.ethers.parseUnits((blocks+mintingAmount+1n).toString(),decimals)
+            );
+            
         });
         it("",async () => {
             const signers = await hre.ethers.getSigners();
