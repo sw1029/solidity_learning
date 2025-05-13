@@ -36,6 +36,12 @@ describe("mytoken deploy",() => {
             const signers = await hre.ethers.getSigners();
             expect(await MyTokenC.balanceOf(signers[0].address)).to.equal(mintingAmount*10n**decimals); 
         });
+        it("should return or revert when minting infinitly", async () => {
+            const signers = await hre.ethers.getSigners();
+            const mintingAgainAmount = hre.ethers.parseUnits("100",decimals); 
+            expect(await MyTokenC.mint(mintingAgainAmount,signers[2].address)).to.be.revertedWith("you are not authorized");
+            //아무나 발행이 가능하다...
+        });
     });
 
     describe("transfer", () => { //transfer는 사실상 transaction을 의미함
