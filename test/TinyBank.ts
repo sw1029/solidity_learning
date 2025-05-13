@@ -25,7 +25,7 @@ describe("TinyBank", () => {
         });
         it("should return staked 0 amount of signer0",async () => {
             const signers = await hre.ethers.getSigners();
-            //expect(await tinyBankC.staked(signers[0].address)).equal(0);
+            expect(await tinyBankC.staked(signers[0].address)).equal(0);
         });
     });
 
@@ -35,7 +35,7 @@ describe("TinyBank", () => {
             const stakingAmount = hre.ethers.parseUnits("50",decimals);
             await MyTokenC.approve(await tinyBankC.getAddress(),stakingAmount);//address에게 contract가 허가를 받아야 함
             await tinyBankC.stake(stakingAmount);
-            //expect(await tinyBankC.staked(signers[0].address)).equal(0);
+            expect(await tinyBankC.staked(signers[0].address)).equal(0);
             expect(await MyTokenC.balanceOf(tinyBankC)).equal(await tinyBankC.totalStaked());
             expect(await tinyBankC.totalStaked()).equal(stakingAmount);
         });
@@ -53,7 +53,7 @@ describe("TinyBank", () => {
             await MyTokenC.approve(await tinyBankC.getAddress(),stakingAmount);//address에게 contract가 허가를 받아야 함
             await tinyBankC.stake(stakingAmount);
             await tinyBankC.withdraw(stakingAmount);
-            //expect(await tinyBankC.staked(signers[0].address)).equal(0);
+            expect(await tinyBankC.staked(signers[0].address)).equal(0);
             //staked가 왜 호출이 안될까???
         });
         it("",async () => {

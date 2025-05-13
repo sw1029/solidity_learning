@@ -15,7 +15,7 @@ describe("mytoken deploy",() => {
         ]);
     });
     //let signers: HardhatEthersSigner[];
-    /*
+    
     describe("basic state", () => {
         it("should return name", async () => {
             expect(await MyTokenC.name()).to.equal("MyToken"); 
@@ -100,5 +100,5 @@ describe("mytoken deploy",() => {
             //expect를 통해 잔액이 100MT인지 확인
         });    
     });    
-    */
+    
 });
