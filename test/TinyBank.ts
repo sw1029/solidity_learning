@@ -75,8 +75,12 @@ describe("TinyBank", () => {
             );
             
         });
-        it("",async () => {
-            const signers = await hre.ethers.getSigners();
+        it("should revert when changing rewardPerBlock by hacker",async () => {
+            //const signers = await hre.ethers.getSigners();
+            const rewardToChange = hre.ethers.parseUnits("10000",decimals);
+            await expect(tinyBankC.setRewardPerBlock(rewardToChange)).to.be.revertedWith(
+                "You are not authorized to change reward amount");
+            
             
         });
     });

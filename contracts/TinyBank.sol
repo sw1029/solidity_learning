@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
+import "./ManagedAccess.sol";
 
 // staking
 // deposit(MyToken) / withdraw(MyToken)
@@ -10,22 +11,31 @@ interface IMyToken {
     function mint(uint256 amount, address to) external;
 }
 
-contract TinyBank {
+contract TinyBank is ManagedAccess{
     event Staked (address from, uint256 amount);
     event Withdraw (uint256 amount, address to);
+
+    uint256 defaultRewardPerBlock = 1 * 10 ** 18; // 블록당 보상량
+    uint256 public rewardPerBlock; // 블록당 보상량
 
     IMyToken public stakingToken; // 토큰을 먼저 배포하고, constructor의 파라미터로 주어야 함함
     mapping(address => uint256) public staked;
     uint256 public totalStaked;
 
-    uint256 public rewardPerBlock = 1 * 10 **18; // 블록당 보상량
+    
 
     mapping(address => uint256) public lastClaimedBlock; // 보상
     address[] public stakedUsers;
 
-    constructor(IMyToken _stakingToken) {
+    constructor(IMyToken _stakingToken) ManagedAccess(msg.sender, msg.sender){
         // 생성자
         stakingToken = _stakingToken;
+        rewardPerBlock = defaultRewardPerBlock;
+    }
+
+    function setRewardPerBlock(uint256 _amount) external onlyMgr{
+        // 보상량을 설정한다
+        rewardPerBlock = _amount;
     }
 
     modifier updateReward(address to) {//modifier는 기본적으로 internal
