@@ -19,4 +19,5 @@ abstract contract ManagedAccess{
         require(msg.sender == manager, "only manager can call this function");
         _;
     }
+    
 }

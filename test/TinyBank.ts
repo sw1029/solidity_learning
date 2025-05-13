@@ -8,6 +8,7 @@ describe("TinyBank", () => {
     let tinyBankC : TinyBank;
     //let signers[] : HardhatEthersSigner;
     beforeEach(async () => {
+        const signers = await hre.ethers.getSigners();
         MyTokenC = await hre.ethers.deployContract("MyToken",[
         "MyToken",
         "MT",
@@ -15,7 +16,8 @@ describe("TinyBank", () => {
         mintingAmount,
         ]);
         tinyBankC = await hre.ethers.deployContract("TinyBank",[
-            await MyTokenC.getAddress()
+            await MyTokenC.getAddress(),
+            [signers[0].address,signers[1].address,signers[2].address],
         ]);
     });
 
@@ -83,6 +85,9 @@ describe("TinyBank", () => {
             
             
         });
+
+
     });
+    
 }); 
     

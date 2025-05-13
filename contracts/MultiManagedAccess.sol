@@ -27,7 +27,7 @@ contract MultiManagedAccess {
     }
 
     modifier onlyAllConfirmed(){
-        require(allConfirmed() == true, "All managers must confirm");
+        require(allConfirmed() == true, "Not all confirmed yet");
         reset();
         _;
     }
@@ -41,7 +41,7 @@ contract MultiManagedAccess {
                 break;
             }
         }
-        require(found == true, "Only manager can call this function");
+        require(found == true, "You are not a manager");
     }
 
     function reset() internal{
