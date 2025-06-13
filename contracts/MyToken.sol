@@ -91,6 +91,7 @@ contract MyToken is ManagedAccess{
         // spender가 from에게 허가를 받았는지 확인한다
         address spender = msg.sender;
         require(allowance[from][spender] >= amount, "insufficient allowance"); // 허가량이 부족하다
+        require(balanceOf[from] >= amount, "insufficient balance"); // 잔고가 부족하다
         allowance[from][msg.sender] -= amount; // 허가량을 차감한다
         balanceOf[from] -= amount; // 보낸사람의 잔고에서 amount만큼 차감
         balanceOf[to] += amount; // 받는사람의 잔고에 amount만큼 추가
