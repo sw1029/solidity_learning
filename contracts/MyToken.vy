@@ -10,12 +10,12 @@ blanceOf : public(HashMap[address, uint256])
 allowances : public(HashMap[address, HashMap[address, uint256]])
 
 @external
-def __init__(_name: String[64], _symbol: String[32], _decimals: uint256, _totalSupply: uint256):
+def __init__(_name: String[64], _symbol: String[32], _decimals: uint256, _initialSupply: uint256):
     self.name = _name
     self.symbol = _symbol
     self.decimals = _decimals
-    self.totalSupply = _totalSupply
-    
+    self.totalSupply = _initialSupply * 10 ** 18
+    self.blanceOf[msg.sender] += _initialSupply * 10 ** 18
 @external
 def transfer(_amount: uint256, _to: address):
     assert blanceOf[msg.sender] >= _amount, "Insufficient balance"
@@ -34,3 +34,13 @@ def transferFrom(_owner: address,_to : address, _amount: uint256):
     self.balanceOf[_owner] -= _amount
     self.balanceOf[_to] += _amount
     self.allowances[_owner][msg.sender] -= _amount
+
+@internal
+def _mint(_amount: uint256, _to: address):
+    self.totalSupply += _amount
+    self.blanceOf[_to] += _amount
+    
+@external
+def mint(_amount: uint256, _to: address):
+    self._mint(_amount, _to)
+    

@@ -36,6 +36,15 @@ describe("mytoken deploy",() => {
             const signers = await hre.ethers.getSigners();
             expect(await MyTokenC.balanceOf(signers[0].address)).to.equal(mintingAmount*10n**decimals); 
         });
+        it("should return initial supply + 1 MT balance for signer 0", async () => {
+            const signers = await hre.ethers.getSigners();
+            const oneMt = hre.ethers.parseUnits("1",decimals);
+            await MyTokenC.mint(oneMt,signers[0].address);
+            expect(await MyTokenC.balanceOf(signers[0].address)).equal(
+                mintingAmount*10n**decimals + oneMt
+            ); 
+        });
+
         it("should return or revert when minting infinitly", async () => {
             const signers = await hre.ethers.getSigners();
             const mintingAgainAmount = hre.ethers.parseUnits("100",decimals); 
