@@ -36,7 +36,10 @@ describe("TinyBank", () => {
             const signers = await hre.ethers.getSigners();
             const stakingAmount = hre.ethers.parseUnits("50",decimals);
             await MyTokenC.approve(await tinyBankC.getAddress(),stakingAmount);//address에게 contract가 허가를 받아야 함
-            await tinyBankC.stake(stakingAmount);
+            await expect(tinyBankC.stake(stakingAmount)).to.emit(tinyBankC,"Staked").withArgs(
+                signers[0].address,
+                stakingAmount
+            );
             expect(await tinyBankC.staked(signers[0].address)).equal(0);
             expect(await MyTokenC.balanceOf(tinyBankC)).equal(await tinyBankC.totalStaked());
             expect(await tinyBankC.totalStaked()).equal(stakingAmount);
@@ -51,7 +54,10 @@ describe("TinyBank", () => {
             const stakingAmount = hre.ethers.parseUnits("50",decimals);
             await MyTokenC.approve(await tinyBankC.getAddress(),stakingAmount);//address에게 contract가 허가를 받아야 함
             await tinyBankC.stake(stakingAmount);
-            await tinyBankC.withdraw(stakingAmount);
+            await expect(tinyBankC.withdraw(stakingAmount)).to.emit(tinyBankC,"Withdrawn").withArgs(
+                stakingAmount,
+                signers[0].address
+            );
             expect(await tinyBankC.staked(signers[0].address)).equal(0);
             
         });

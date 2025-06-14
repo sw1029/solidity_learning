@@ -1,5 +1,5 @@
-# version ^0.3.0
-# license MIT
+# @version ^0.3.0
+# @license MIT
 
 event Transfer:
     owner: indexed(address)
