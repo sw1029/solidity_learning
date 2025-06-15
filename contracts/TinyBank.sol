@@ -27,7 +27,7 @@ contract TinyBank is MultiManagedAccess{
     address[] public stakedUsers;
 
     
-    constructor(IMyToken _stakingToken, address [] memory _managers) MultiManagedAccess(msg.sender, _managers){
+    constructor(IMyToken _stakingToken) MultiManagedAccess(msg.sender){
         // 생성자
         stakingToken = _stakingToken;
         rewardPerBlock = defaultRewardPerBlock;
